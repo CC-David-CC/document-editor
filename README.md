@@ -1,7 +1,8 @@
 # Document Editor
 
-This app bundles open-source Tiptap and stores editable `.codidoc` files in the
-account's version-checked browser/server mirror. It creates a separate PDF in
+This app bundles open-source Tiptap and stores editable `.doc` files in the
+account's version-checked browser/server mirror. The `.doc` extension denotes
+this app's own JSON format; it does not imply Microsoft Word compatibility. It creates a separate PDF in
 Files; Preview PDF opens the independent PDF Viewer using the same generated
 bytes. Images are embedded in the document. The PDF generator supports basic
 report content and reports unsupported features or characters instead of
