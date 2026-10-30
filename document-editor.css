@@ -1,0 +1,7 @@
+.document-editor-content{display:flex;flex-direction:column;overflow:hidden;background:#f2f4f5}
+.document-filebar,.document-toolbar{display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding:6px;background:#fff;border-bottom:1px solid #d5dadd}
+.document-filebar input{min-width:130px;flex:1;padding:6px}.document-filebar button,.document-toolbar button{min-height:34px;padding:4px 8px}
+.document-surface{overflow:auto;flex:1;min-height:0;padding:18px}.document-editable .tiptap{box-sizing:border-box;background:white;max-width:794px;min-height:500px;margin:auto;padding:48px;outline:none;box-shadow:0 1px 6px #0002;line-height:1.45;overflow-wrap:anywhere}
+.document-editable .tiptap img{max-width:100%;height:auto}.document-editable .tiptap table{border-collapse:collapse;width:100%;table-layout:fixed}.document-editable .tiptap td,.document-editable .tiptap th{border:1px solid #b8c2c8;padding:6px;vertical-align:top}.document-editable .tiptap th{background:#eff4f8}.document-editable hr[data-page-break]{border:0;border-top:2px dashed #9daab0;margin:24px 0}
+.document-preview canvas{display:block;max-width:100%;height:auto;background:white;margin:0 auto 16px;box-shadow:0 1px 6px #0003}.document-editor-content .app-status{background:#fff;padding:6px}
+@media(max-width:720px){.document-surface{padding:5px}.document-editable .tiptap{padding:16px}.document-toolbar button,.document-filebar button{min-height:40px}}
