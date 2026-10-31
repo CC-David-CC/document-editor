@@ -12,6 +12,7 @@ Use **Open from My files** to open a saved report, or **Choose save folder**
 to select where the current report will be saved. A document that fails to
 open leaves the current report and its unsaved changes available. Saving first
 writes to the account's browser storage and then synchronizes with the server.
+Use the Image button to choose a PNG, JPEG, or WebP already in My files.
 
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
 building. The bundled pdfmake Roboto fonts are distributed under the Apache
