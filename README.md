@@ -19,3 +19,5 @@ building. The bundled pdfmake Roboto fonts are distributed under the Apache
 License 2.0; see ROBOTO-LICENSE.txt and the dependency license notices.
 
 If a local report conflicts with the server while saving, the editor directs you to resolve the copies in Files and keeps further edits marked unsaved.
+
+If the report or insertion point changes while an image is being loaded, insertion is cancelled so it cannot appear in the wrong place; choose it again. An image with conflicting copies must first be resolved in Files. PDF export reports an immediate conflicting-copy result rather than claiming normal sync.
