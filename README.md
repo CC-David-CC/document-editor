@@ -17,3 +17,5 @@ Use the Image button to choose a PNG, JPEG, or WebP already in My files.
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
 building. The bundled pdfmake Roboto fonts are distributed under the Apache
 License 2.0; see ROBOTO-LICENSE.txt and the dependency license notices.
+
+If a local report conflicts with the server while saving, the editor directs you to resolve the copies in Files and keeps further edits marked unsaved.
