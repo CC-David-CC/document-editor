@@ -11,7 +11,7 @@ silently claiming a faithful export. It is not a Word-compatible layout engine.
 Use **Open from My files** to open a saved report, or **Choose save folder**
 to select where the current report will be saved. A document that fails to
 open leaves the current report and its unsaved changes available. Saving first
-writes to the account's browser storage and then synchronizes with the server.
+writes to the account's browser storage and then synchronizes with the server. Saving over another report asks for confirmation; a changed or removed saved report requires reopening or saving a copy. PDF export captures the document and destination at the start, and reports if later edits were not included.
 Use the Image button to choose a PNG, JPEG, or WebP already in My files.
 
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
