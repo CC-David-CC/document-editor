@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import {TableKit} from '@tiptap/extension-table';
 import {isAnimatedImage} from './animation.mjs';
+import {validateTable} from './table-validation.mjs';
 import './document-editor.css';
 const FORMAT='codi-document/1',MAX_IMAGE=4*1024*1024;
 const safeImage=src=>/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/i.test(src||'');
@@ -27,7 +28,7 @@ function clipboardImageProblem(html){
 const ReportImage=Image.extend({parseHTML(){return [{tag:'img[src]',getAttrs:node=>safeImage(node.getAttribute('src'))?null:false}];}});
 const PageBreak=Node.create({name:'pageBreak',group:'block',atom:true,parseHTML(){return [{tag:'hr[data-page-break]'}];},renderHTML({HTMLAttributes}){return ['hr',mergeAttributes(HTMLAttributes,{'data-page-break':'','aria-label':'Page break'})];}});
 function validLink(value){try{return ['https:','http:','mailto:'].includes(new URL(value).protocol);}catch{return false;}}
-function validateTree(tree){let count=0;const visit=node=>{if(!node||typeof node!=='object'||++count>100000)throw Error('Invalid document.');if(node.type==='image'&&!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/i.test(node.attrs?.src||''))throw Error('Document contains an unsupported image.');for(const mark of node.marks||[])if(mark.type==='link'&&!validLink(mark.attrs?.href))throw Error('Document contains an unsupported link.');for(const child of node.content||[])visit(child);};visit(tree);}
+function validateTree(tree){let count=0;const visit=node=>{if(!node||typeof node!=='object'||++count>100000)throw Error('Invalid document.');if(node.type==='table')validateTable(node);if(node.type==='image'&&!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/i.test(node.attrs?.src||''))throw Error('Document contains an unsupported image.');for(const mark of node.marks||[])if(mark.type==='link'&&!validLink(mark.attrs?.href))throw Error('Document contains an unsupported link.');for(const child of node.content||[])visit(child);};visit(tree);}
 function dataURL(data,mime){let raw='';for(let i=0;i<data.length;i+=8192)raw+=String.fromCharCode(...data.subarray(i,i+8192));return 'data:'+mime+';base64,'+btoa(raw);}
 function imageMatchesType(data,mime){
  if(mime==='image/png')return data.length>=8&&[137,80,78,71,13,10,26,10].every((byte,i)=>data[i]===byte);

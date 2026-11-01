@@ -121,3 +121,13 @@ embedded image, page break and table are saved to My files and synced to the
 server; the two-page PDF is previewed, exported, checked for selectable report
 text, and reopened. It passed in desktop and emulated-phone Chromium viewports.
 This does not verify physical touch, local-computer upload, or PDF accessibility.
+
+Report tables are checked before opening and PDF generation: their cells must
+form a rectangular grid, with valid spans, no overlaps and no missing cells.
+Tables are limited to 5,000 rows and 128 columns. Invalid or larger tables are
+rejected with an error; their saved files are left unchanged. A registered-account
+local test covered merged cells, a nested table and a long cell spanning PDF
+pages, plus server sync and fresh-session reopen at desktop and emulated-phone
+sizes. It also checked that an imported invalid span was rejected without
+rewriting the original. PDF text extraction was checked, not every visual layout
+or physical-phone interaction.

@@ -1,6 +1,7 @@
 /** Render the supported document schema to an actual, selectable-text PDF. */
 import pdfMake from 'pdfmake/build/pdfmake.js';
 import fonts from 'pdfmake/build/vfs_fonts.js';
+import {validateTable} from './table-validation.mjs';
 pdfMake.vfs=fonts;
 const safeUrl=url=>{try{return ['http:','https:','mailto:'].includes(new URL(url).protocol);}catch{return false;}};
 function inline(node){
@@ -35,7 +36,7 @@ function block(node,imageSizes,maxWidth=480){
 }
 export async function makePdf(document){
  if(document?.type!=='doc'||!Array.isArray(document.content))throw Error('Invalid document.');
- const sources=new Set();const collect=node=>{if(node.type==='image')sources.add(node.attrs?.src||'');for(const child of node.content||[])collect(child);};document.content.forEach(collect);
+ const sources=new Set();const collect=node=>{if(node.type==='table')validateTable(node);if(node.type==='image')sources.add(node.attrs?.src||'');for(const child of node.content||[])collect(child);};document.content.forEach(collect);
  const imageSizes=new Map();for(const src of sources){if(!/^data:image\/(png|jpeg);base64,/i.test(src))throw Error('PDF supports PNG and JPEG images.');const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('An image could not be decoded for PDF export.'));img.src=src;});if(!img.naturalWidth||!img.naturalHeight)throw Error('An image could not be decoded for PDF export.');imageSizes.set(src,{width:img.naturalWidth,height:img.naturalHeight});}
  const definition={pageSize:'A4',pageMargins:[54,55,54,55],defaultStyle:{font:'Roboto',fontSize:11},content:document.content.map(node=>block(node,imageSizes))};
  return new Promise((resolve,reject)=>{try{pdfMake.createPdf(definition).getBuffer(buffer=>resolve(new Uint8Array(buffer)));}catch(error){reject(error);}});
