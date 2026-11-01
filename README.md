@@ -80,3 +80,8 @@ If `/Untitled.doc` fails to open, the separate blank report defaults to
 and emulated-phone account tests saved and synced that scratch report, confirmed
 the original remained unchanged, and retried the original successfully.
 Physical touch and additional failure causes remain unverified.
+
+Use **Title**, **Heading**, and **Subheading** to organize a report into
+three heading levels. The saved report retains the heading levels, and PDF output uses a distinct
+font size for each level. The exported PDF is not a tagged accessibility PDF. Press the active heading control again, or
+choose Paragraph, to return that paragraph to ordinary text.
