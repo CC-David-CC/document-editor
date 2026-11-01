@@ -74,3 +74,9 @@ Only one save-folder chooser can be active. Saving and PDF export wait for it
 to finish. If the document destination changes while it is open, the new path
 is preserved and the folder must be chosen again. A late choice after closing
 the window is discarded.
+
+If `/Untitled.doc` fails to open, the separate blank report defaults to
+`/Untitled-recovery.doc`, so an ordinary Save targets a different file. Desktop
+and emulated-phone account tests saved and synced that scratch report, confirmed
+the original remained unchanged, and retried the original successfully.
+Physical touch and additional failure causes remain unverified.
