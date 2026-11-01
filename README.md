@@ -64,26 +64,29 @@ File-change checks are ordered so an older metadata response cannot clear a
 newer warning. The editor checks again after opening, saving or exporting,
 including when account-file changes arrived while the operation was busy.
 
-PDF export supports selected Latin, Greek, superscript/subscript and math
-glyphs from the bundled Roboto fonts, including Ω, Δ, μ, π, √, ≈ and ≤. Before
-export, text is checked against character maps common to all four bundled
-Roboto faces; unsupported characters identify their Unicode code point and
-stop the export before an existing PDF can be replaced. A report can still be
-saved and reopened with those characters. In the prior build, for example, ƀ
-was accepted but exported as a NUL character. Local desktop and emulated-phone
-account tests cover that failure, existing-PDF preservation, server sync and
-fresh-session reopening, as well as the supported engineering symbols. Physical
-touch and every accepted glyph have not been individually checked in a viewer.
+PDF export uses bundled Roboto fonts for selected Latin, Greek, superscript,
+subscript and math glyphs, including Ω, Δ, μ, π, √, ≈ and ≤. When a Latin
+grapheme is missing from Roboto but supported by all four bundled Noto Sans
+faces, export selects Noto Sans for that grapheme, preserving its formatting.
+The fallback assets are loaded only when needed and add about 2 MiB in four font
+files. The unmodified font files come from Debian `fonts-noto-core`
+version `20201225-2` and are distributed under SIL OFL 1.1; see
+`fonts/LICENSE.txt`, also included in the built app. Character-map ranges must be checked when fonts
+change. Unsupported graphemes stop export before an existing PDF is replaced,
+while the original report can still be saved. This is a Latin-focused fallback,
+not general complex-script support; Greek combining sequences and scripts such
+as Arabic, Hebrew, CJK and emoji remain unsupported unless already covered by
+Roboto, and layout and shaping beyond the tested cases are unverified.
 
-This guard is an interim measure. A broader-coverage PDF fallback should bundle
-appropriately licensed normal, bold, italic and bold-italic fonts, choose fonts
-per text run without splitting combining sequences, and validate shaping,
-extraction, links and mixed-font layouts. `tests/document-pdf-missing-glyph-review.test.mjs`
-contains the ƀ preservation fixture to evolve into an export-success check.
-A local Noto Sans inspection found ƀ in its four styles but not the existing
-Roboto math characters √, ≈ and ≤, so replacing Roboto wholesale would lose
-supported content. Check licenses, lazy-load cost and character maps before
-adding a fallback; verify both sets of glyphs and formatting in actual PDFs.
+`tests/document-pdf-missing-glyph-review.test.mjs` checks ƀ in regular, bold,
+italic and bold-italic text mixed with supported Greek/math symbols and a
+decomposed Latin combining mark. Desktop and emulated-phone registered-account
+tests verify PDF text extraction, visible text-layer geometry, save/sync and
+fresh-session reopen, unsupported-character protection and preservation of an
+existing PDF if fallback-font loading fails. It does not establish pixel-perfect
+layout, native phone interaction, accessibility tagging, or all grapheme and
+shaping behavior. Earlier versions silently exported ƀ as NUL; the prior guard
+refused to export it rather than corrupt it.
 
 Only one save-folder chooser can be active. Saving and PDF export wait for it
 to finish. If the document destination changes while it is open, the new path
