@@ -37,3 +37,8 @@ If a document opened directly from Files cannot be read or validated, the error
 remains visible and a new blank report becomes editable. The original file is
 not modified, and the failed file is not used as the blank report's save or
 restore path.
+
+The window asks before closing while a document save or PDF export is in
+progress, even if the report was clean when the operation began. Cancelling or
+failing the operation restores the previous clean state unless newer edits were
+made. A write already sent to storage can still finish after the window closes.
