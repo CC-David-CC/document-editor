@@ -46,3 +46,12 @@ made. A write already sent to storage can still finish after the window closes.
 File-change checks are ordered so an older metadata response cannot clear a
 newer warning. The editor checks again after opening, saving or exporting,
 including when account-file changes arrived while the operation was busy.
+
+PDF export supports common Greek letters, verified superscripts/subscripts and
+selected math symbols from the bundled Roboto fonts, including Ω, Δ, μ, π, √,
+≈ and ≤. The added character ranges were checked against all four bundled Roboto font
+faces; other symbols still produce an explicit error. Local desktop
+and emulated-phone tests save and sync a report, inspect selectable PDF text,
+reopen the report in a fresh session, and verify an unsupported character does
+not replace an earlier PDF. Physical touch and every supported glyph have not
+been individually verified in a viewer.
