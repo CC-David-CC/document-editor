@@ -16,7 +16,10 @@ function block(node){
   case 'heading':return {text:(node.content||[]).map(inline),fontSize:node.attrs?.level===1?22:node.attrs?.level===2?17:14,bold:true,margin:[0,10,0,8]};
   case 'image':if(!/^data:image\/(png|jpeg);base64,/i.test(node.attrs?.src||''))throw Error('PDF supports PNG and JPEG images.');return {image:node.attrs.src,fit:[480,550],margin:[0,4,0,10]};
   case 'pageBreak':return {text:'',pageBreak:'after'};
-  case 'bulletList':case 'orderedList':return {[node.type==='bulletList'?'ul':'ol']:(node.content||[]).map(item=>({stack:(item.content||[]).map(block)})),margin:[0,0,0,8]};
+  case 'bulletList':case 'orderedList':{
+   const start=node.attrs?.start??1;
+   if(node.type==='orderedList'&&!Number.isSafeInteger(start))throw Error('PDF export requires a valid ordered-list start number.');
+   return {[node.type==='bulletList'?'ul':'ol']:(node.content||[]).map(item=>({stack:(item.content||[]).map(block)})),...(node.type==='orderedList'?{start}:{}),margin:[0,0,0,8]};}
   case 'table':{
    const rows=node.content||[],widths=Math.max(...rows.map(r=>(r.content||[]).reduce((n,c)=>n+(c.attrs?.colspan||1),0)),0);if(!widths)throw Error('Empty tables cannot be exported.');
    const occupied=[];const body=rows.map((row,y)=>{const cells=Array(widths).fill(null);let x=0;for(const cell of row.content||[]){while(occupied[y]?.[x]){cells[x]='';x++;}const colSpan=cell.attrs?.colspan||1,rowSpan=cell.attrs?.rowspan||1;const value={stack:(cell.content||[]).map(block),...(cell.type==='tableHeader'?{bold:true,fillColor:'#eff4f8'}:{}),...(colSpan>1?{colSpan}:{}),...(rowSpan>1?{rowSpan}:{})};for(let yy=y;yy<y+rowSpan;yy++){occupied[yy]??=[];for(let xx=x;xx<x+colSpan;xx++){if(occupied[yy][xx])throw Error('Overlapping table cells cannot be exported.');occupied[yy][xx]=true;if(yy===y&&xx>x)cells[xx]='';}}cells[x]=value;x+=colSpan;}for(let j=0;j<widths;j++)if(cells[j]===null)cells[j]='';return cells;});

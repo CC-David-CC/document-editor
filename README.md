@@ -85,3 +85,8 @@ Use **Title**, **Heading**, and **Subheading** to organize a report into
 three heading levels. The saved report retains the heading levels, and PDF output uses a distinct
 font size for each level. The exported PDF is not a tagged accessibility PDF. Press the active heading control again, or
 choose Paragraph, to return that paragraph to ordinary text.
+
+PDF export preserves a numbered list's starting number, so a continued list
+starting at 5 remains numbered 5, 6 and so on. Local registered-account desktop
+and emulated-phone tests cover editing, PDF text, server sync and a fresh-session
+reopen; physical touch remains unverified.
