@@ -17,6 +17,9 @@ The image's filename must match its file signature; mismatches are rejected
 before changing the report. Images are also decoded before insertion, but the
 signature check is not a complete integrity or malware scan. Previously saved
 reports are not automatically repaired.
+The My files image chooser rejects animated PNG and WebP rather than silently
+flattening them to a still image. This check does not cover images already in
+saved reports or all clipboard content; PDF output is a static document.
 
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
 building. The bundled pdfmake Roboto fonts are distributed under the Apache

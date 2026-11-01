@@ -3,6 +3,7 @@ import {EditorState} from '@tiptap/pm/state';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import {TableKit} from '@tiptap/extension-table';
+import {isAnimatedImage} from './animation.mjs';
 import './document-editor.css';
 const FORMAT='codi-document/1',MAX_IMAGE=4*1024*1024;
 const safeImage=src=>/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/i.test(src||'');
@@ -17,7 +18,7 @@ function imageMatchesType(data,mime){
  if(mime==='image/webp')return data.length>=12&&[82,73,70,70].every((byte,i)=>data[i]===byte)&&[87,69,66,80].every((byte,i)=>data[i+8]===byte);
  return false;
 }
-async function reportImage(data,mime){if(!imageMatchesType(data,mime))throw Error('Image content does not match its file extension. Choose a matching PNG, JPEG or WebP.');const src=dataURL(data,mime),img=new window.Image();img.src=src;try{await img.decode();}catch{throw Error('Image could not be decoded.');}if(img.naturalWidth*img.naturalHeight>20000000)throw Error('Images are limited to 20 megapixels.');if(mime!=='image/webp')return src;const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);const png=canvas.toDataURL('image/png');if(png.length>MAX_IMAGE*4/3+64)throw Error('Converted image is too large for a report.');return png;}
+async function reportImage(data,mime){if(!imageMatchesType(data,mime))throw Error('Image content does not match its file extension. Choose a matching PNG, JPEG or WebP.');if(isAnimatedImage(data))throw Error('Animated images are not supported in reports. The source image is unchanged.');const src=dataURL(data,mime),img=new window.Image();img.src=src;try{await img.decode();}catch{throw Error('Image could not be decoded.');}if(img.naturalWidth*img.naturalHeight>20000000)throw Error('Images are limited to 20 megapixels.');if(mime!=='image/webp')return src;const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);const png=canvas.toDataURL('image/png');if(png.length>MAX_IMAGE*4/3+64)throw Error('Converted image is too large for a report.');return png;}
 export function mount(host){
  const {w,desktop}=host,{make,textButton,appInput}=host.ui,{mirrorFileContext,signedInSubject}=host.storage,launch=w.launchContext,owner=launch?.owner||signedInSubject();
  const state=w.documentEditor??={path:launch?.path||'/Untitled.doc',version:null,dirty:false,loaded:!launch,edits:0};if(owner)w.ownerSub=owner;
