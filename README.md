@@ -104,10 +104,14 @@ Images inside tables or lists are scaled to the available content width rather
 than the whole page. Local registered-account desktop and emulated-phone tests
 inserted a PNG from My files into a two-column table, checked the PDF image
 width and adjacent selectable text, synced the report and PDF, and reopened the
-report in a fresh browser session. One desktop attempt did not retain the
-table-cell selection during insertion; a later run passed, and the cause remains
-unproven. Complex nested tables, physical touch and pixel-level layout were not
-verified.
+report in a fresh browser session. A fast-selection race was traced to the
+browser caret moving before the editor's selection state updated; Image now
+captures focused text selections before opening the picker and rechecks after
+loading. A controlled reproduction failed before the fix and passed after it;
+repeated desktop and emulated-phone account workflows and selection-change,
+changed-document and close/reopen checks passed locally. This uses text caret
+positions; non-text selections are left to the editor. Complex nested tables,
+physical touch and pixel-level layout were not verified.
 
 The file bar identifies `.doc` as this editor’s own report format, not a Word file, and points to PDF export for sharing. This clarification stays visible as the report is edited and saved.
 
