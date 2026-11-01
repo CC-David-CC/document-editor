@@ -90,3 +90,10 @@ PDF export preserves a numbered list's starting number, so a continued list
 starting at 5 remains numbered 5, 6 and so on. Local registered-account desktop
 and emulated-phone tests cover editing, PDF text, server sync and a fresh-session
 reopen; physical touch remains unverified.
+
+PDF images use their intrinsic display size at 96 CSS pixels per inch and are
+scaled down proportionally when they exceed the printable area. Small images
+are not enlarged to fill the page. Images that cannot be decoded cause export
+to fail without replacing an existing PDF. Desktop and emulated-phone account
+tests verify small and oversized image geometry, sync, and fresh-session reopen;
+physical touch and image metadata/orientation edge cases remain unverified.
