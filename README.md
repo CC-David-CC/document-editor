@@ -27,3 +27,8 @@ confirmation is open. If the report changes during a confirmation, the current
 report stays open and the user can choose Open again. The picker also asks
 before discarding edits made while it was open; only one open flow can run per
 editor window.
+
+Opening a different report resets the Undo and Redo history so edits from the
+previous report cannot alter the newly opened one. Local desktop and
+emulated-phone tests cover opening, editing, Undo, Redo and synced saving;
+physical touch remains unverified.
