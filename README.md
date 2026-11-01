@@ -13,6 +13,10 @@ to select where the current report will be saved. A document that fails to
 open leaves the current report and its unsaved changes available. Saving first
 writes to the account's browser storage and then synchronizes with the server. Saving over another report asks for confirmation; a changed or removed saved report requires reopening or saving a copy. PDF export captures the document and destination at the start, and reports if later edits were not included.
 Use the Image button to choose a PNG, JPEG, or WebP already in My files.
+The image's filename must match its file signature; mismatches are rejected
+before changing the report. Images are also decoded before insertion, but the
+signature check is not a complete integrity or malware scan. Previously saved
+reports are not automatically repaired.
 
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
 building. The bundled pdfmake Roboto fonts are distributed under the Apache

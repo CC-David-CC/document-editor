@@ -11,7 +11,13 @@ const PageBreak=Node.create({name:'pageBreak',group:'block',atom:true,parseHTML(
 function validLink(value){try{return ['https:','http:','mailto:'].includes(new URL(value).protocol);}catch{return false;}}
 function validateTree(tree){let count=0;const visit=node=>{if(!node||typeof node!=='object'||++count>100000)throw Error('Invalid document.');if(node.type==='image'&&!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/i.test(node.attrs?.src||''))throw Error('Document contains an unsupported image.');for(const mark of node.marks||[])if(mark.type==='link'&&!validLink(mark.attrs?.href))throw Error('Document contains an unsupported link.');for(const child of node.content||[])visit(child);};visit(tree);}
 function dataURL(data,mime){let raw='';for(let i=0;i<data.length;i+=8192)raw+=String.fromCharCode(...data.subarray(i,i+8192));return 'data:'+mime+';base64,'+btoa(raw);}
-async function reportImage(data,mime){const src=dataURL(data,mime),img=new window.Image();img.src=src;try{await img.decode();}catch{throw Error('Image could not be decoded.');}if(img.naturalWidth*img.naturalHeight>20000000)throw Error('Images are limited to 20 megapixels.');if(mime!=='image/webp')return src;const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);const png=canvas.toDataURL('image/png');if(png.length>MAX_IMAGE*4/3+64)throw Error('Converted image is too large for a report.');return png;}
+function imageMatchesType(data,mime){
+ if(mime==='image/png')return data.length>=8&&[137,80,78,71,13,10,26,10].every((byte,i)=>data[i]===byte);
+ if(mime==='image/jpeg')return data.length>=3&&data[0]===255&&data[1]===216&&data[2]===255;
+ if(mime==='image/webp')return data.length>=12&&[82,73,70,70].every((byte,i)=>data[i]===byte)&&[87,69,66,80].every((byte,i)=>data[i+8]===byte);
+ return false;
+}
+async function reportImage(data,mime){if(!imageMatchesType(data,mime))throw Error('Image content does not match its file extension. Choose a matching PNG, JPEG or WebP.');const src=dataURL(data,mime),img=new window.Image();img.src=src;try{await img.decode();}catch{throw Error('Image could not be decoded.');}if(img.naturalWidth*img.naturalHeight>20000000)throw Error('Images are limited to 20 megapixels.');if(mime!=='image/webp')return src;const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);const png=canvas.toDataURL('image/png');if(png.length>MAX_IMAGE*4/3+64)throw Error('Converted image is too large for a report.');return png;}
 export function mount(host){
  const {w,desktop}=host,{make,textButton,appInput}=host.ui,{mirrorFileContext,signedInSubject}=host.storage,launch=w.launchContext,owner=launch?.owner||signedInSubject();
  const state=w.documentEditor??={path:launch?.path||'/Untitled.doc',version:null,dirty:false,loaded:!launch,edits:0};if(owner)w.ownerSub=owner;
