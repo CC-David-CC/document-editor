@@ -32,3 +32,8 @@ Opening a different report resets the Undo and Redo history so edits from the
 previous report cannot alter the newly opened one. Local desktop and
 emulated-phone tests cover opening, editing, Undo, Redo and synced saving;
 physical touch remains unverified.
+
+If a document opened directly from Files cannot be read or validated, the error
+remains visible and a new blank report becomes editable. The original file is
+not modified, and the failed file is not used as the blank report's save or
+restore path.
