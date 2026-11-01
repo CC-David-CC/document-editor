@@ -69,3 +69,8 @@ and emulated-phone tests save and sync a report, inspect selectable PDF text,
 reopen the report in a fresh session, and verify an unsupported character does
 not replace an earlier PDF. Physical touch and every supported glyph have not
 been individually verified in a viewer.
+
+Only one save-folder chooser can be active. Saving and PDF export wait for it
+to finish. If the document destination changes while it is open, the new path
+is preserved and the folder must be chosen again. A late choice after closing
+the window is discarded.
