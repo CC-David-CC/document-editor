@@ -42,3 +42,7 @@ The window asks before closing while a document save or PDF export is in
 progress, even if the report was clean when the operation began. Cancelling or
 failing the operation restores the previous clean state unless newer edits were
 made. A write already sent to storage can still finish after the window closes.
+
+File-change checks are ordered so an older metadata response cannot clear a
+newer warning. The editor checks again after opening, saving or exporting,
+including when account-file changes arrived while the operation was busy.
