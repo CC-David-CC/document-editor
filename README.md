@@ -42,10 +42,15 @@ previous report cannot alter the newly opened one. Local desktop and
 emulated-phone tests cover opening, editing, Undo, Redo and synced saving;
 physical touch remains unverified.
 
-If a document opened directly from Files cannot be read or validated, the error
-remains visible and a new blank report becomes editable. The original file is
-not modified, and the failed file is not used as the blank report's save or
-restore path.
+If a document opened directly from Files cannot be read, a separate blank
+report becomes editable and **Retry opening document** remains available. Retry
+asks before discarding edits in the blank report; opening or saving a different
+report clears the retry and restores that report on later reloads. The original
+file remains the restore target until then. If the file is read but is invalid,
+the editor instead opens a separate blank report without keeping it as the
+restore target. The original is never used as the blank report's save path.
+Local desktop and emulated-phone tests inject a read failure and cover retry,
+the discard warning, saving a copy, server synchronization and reopening.
 
 The window asks before closing while a document save or PDF export is in
 progress, even if the report was clean when the operation began. Cancelling or
