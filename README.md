@@ -102,3 +102,10 @@ tests verify small and oversized image geometry, sync, and fresh-session reopen;
 physical touch and image metadata/orientation edge cases remain unverified.
 
 The file bar identifies `.doc` as this editor’s own report format, not a Word file, and points to PDF export for sharing. This clarification stays visible as the report is edited and saved.
+
+The registered-account report workflow is covered by
+`tests/document-report-workflow-review.test.mjs`: a heading, bold text, list,
+embedded image, page break and table are saved to My files and synced to the
+server; the two-page PDF is previewed, exported, checked for selectable report
+text, and reopened. It passed in desktop and emulated-phone Chromium viewports.
+This does not verify physical touch, local-computer upload, or PDF accessibility.
