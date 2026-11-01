@@ -97,3 +97,5 @@ are not enlarged to fill the page. Images that cannot be decoded cause export
 to fail without replacing an existing PDF. Desktop and emulated-phone account
 tests verify small and oversized image geometry, sync, and fresh-session reopen;
 physical touch and image metadata/orientation edge cases remain unverified.
+
+The file bar identifies `.doc` as this editor’s own report format, not a Word file, and points to PDF export for sharing. This clarification stays visible as the report is edited and saved.
