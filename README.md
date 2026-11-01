@@ -100,6 +100,14 @@ are not enlarged to fill the page. Images that cannot be decoded cause export
 to fail without replacing an existing PDF. Desktop and emulated-phone account
 tests verify small and oversized image geometry, sync, and fresh-session reopen;
 physical touch and image metadata/orientation edge cases remain unverified.
+Images inside tables or lists are scaled to the available content width rather
+than the whole page. Local registered-account desktop and emulated-phone tests
+inserted a PNG from My files into a two-column table, checked the PDF image
+width and adjacent selectable text, synced the report and PDF, and reopened the
+report in a fresh browser session. One desktop attempt did not retain the
+table-cell selection during insertion; a later run passed, and the cause remains
+unproven. Complex nested tables, physical touch and pixel-level layout were not
+verified.
 
 The file bar identifies `.doc` as this editor’s own report format, not a Word file, and points to PDF export for sharing. This clarification stays visible as the report is edited and saved.
 

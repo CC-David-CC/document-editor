@@ -10,7 +10,7 @@ function inline(node){
  // four bundled Roboto font faces. Unsupported glyphs still fail explicitly.
  const result={text:node.text||''};if(/[^\u0000-\u024f\u0384-\u038a\u038c\u038e-\u03a1\u03a3-\u03ce\u03d1-\u03d2\u03d6\u2000-\u206f\u2070\u2074-\u208e\u20ac\u2202\u2206\u220f\u2211-\u2212\u221a\u221e\u222b\u2248\u2260\u2264-\u2265]/u.test(result.text))throw Error('PDF export currently supports Latin text and selected Greek and math symbols; this report contains unsupported characters.');for(const mark of node.marks||[]){if(mark.type==='bold')result.bold=true;else if(mark.type==='italic')result.italics=true;else if(mark.type==='link'){if(!safeUrl(mark.attrs?.href))throw Error('A link uses an unsupported address.');result.link=mark.attrs.href;result.color='#245d9a';result.decoration='underline';}else throw Error('PDF export cannot handle '+mark.type+' formatting.');}return result;
 }
-function block(node,imageSizes){
+function block(node,imageSizes,maxWidth=480){
  switch(node.type){
   case 'paragraph':return {text:(node.content||[]).map(inline),margin:[0,0,0,8]};
   case 'heading':return {text:(node.content||[]).map(inline),fontSize:node.attrs?.level===1?22:node.attrs?.level===2?17:14,bold:true,margin:[0,10,0,8]};
@@ -19,16 +19,16 @@ function block(node,imageSizes){
    const size=imageSizes.get(src);if(!size)throw Error('An image could not be decoded for PDF export.');
    // CSS pixels map to points at 96 dpi. Reduce oversized images to fit the
    // page, but never enlarge a small image to fill the page.
-   const width=size.width*.75,height=size.height*.75,scale=Math.min(1,480/width,550/height);
+   const width=size.width*.75,height=size.height*.75,scale=Math.min(1,maxWidth/width,550/height);
    return {image:src,width:width*scale,margin:[0,4,0,10]};}
   case 'pageBreak':return {text:'',pageBreak:'after'};
   case 'bulletList':case 'orderedList':{
    const start=node.attrs?.start??1;
    if(node.type==='orderedList'&&!Number.isSafeInteger(start))throw Error('PDF export requires a valid ordered-list start number.');
-   return {[node.type==='bulletList'?'ul':'ol']:(node.content||[]).map(item=>({stack:(item.content||[]).map(child=>block(child,imageSizes))})),...(node.type==='orderedList'?{start}:{}),margin:[0,0,0,8]};}
+   return {[node.type==='bulletList'?'ul':'ol']:(node.content||[]).map(item=>({stack:(item.content||[]).map(child=>block(child,imageSizes,Math.max(1,maxWidth-20)))})),...(node.type==='orderedList'?{start}:{}),margin:[0,0,0,8]};}
   case 'table':{
    const rows=node.content||[],widths=Math.max(...rows.map(r=>(r.content||[]).reduce((n,c)=>n+(c.attrs?.colspan||1),0)),0);if(!widths)throw Error('Empty tables cannot be exported.');
-   const occupied=[];const body=rows.map((row,y)=>{const cells=Array(widths).fill(null);let x=0;for(const cell of row.content||[]){while(occupied[y]?.[x]){cells[x]='';x++;}const colSpan=cell.attrs?.colspan||1,rowSpan=cell.attrs?.rowspan||1;const value={stack:(cell.content||[]).map(child=>block(child,imageSizes)),...(cell.type==='tableHeader'?{bold:true,fillColor:'#eff4f8'}:{}),...(colSpan>1?{colSpan}:{}),...(rowSpan>1?{rowSpan}:{})};for(let yy=y;yy<y+rowSpan;yy++){occupied[yy]??=[];for(let xx=x;xx<x+colSpan;xx++){if(occupied[yy][xx])throw Error('Overlapping table cells cannot be exported.');occupied[yy][xx]=true;if(yy===y&&xx>x)cells[xx]='';}}cells[x]=value;x+=colSpan;}for(let j=0;j<widths;j++)if(cells[j]===null)cells[j]='';return cells;});
+   const occupied=[];const body=rows.map((row,y)=>{const cells=Array(widths).fill(null);let x=0;for(const cell of row.content||[]){while(occupied[y]?.[x]){cells[x]='';x++;}const colSpan=cell.attrs?.colspan||1,rowSpan=cell.attrs?.rowspan||1;const cellWidth=Math.max(1,maxWidth*colSpan/widths-12);const value={stack:(cell.content||[]).map(child=>block(child,imageSizes,cellWidth)),...(cell.type==='tableHeader'?{bold:true,fillColor:'#eff4f8'}:{}),...(colSpan>1?{colSpan}:{}),...(rowSpan>1?{rowSpan}:{})};for(let yy=y;yy<y+rowSpan;yy++){occupied[yy]??=[];for(let xx=x;xx<x+colSpan;xx++){if(occupied[yy][xx])throw Error('Overlapping table cells cannot be exported.');occupied[yy][xx]=true;if(yy===y&&xx>x)cells[xx]='';}}cells[x]=value;x+=colSpan;}for(let j=0;j<widths;j++)if(cells[j]===null)cells[j]='';return cells;});
    return {table:{headerRows:rows[0]?.content?.every(c=>c.type==='tableHeader')?1:0,widths:Array(widths).fill('*'),body},layout:'lightHorizontalLines',margin:[0,0,0,10]};}
   default:throw Error('PDF export does not support '+node.type+'.');
  }
