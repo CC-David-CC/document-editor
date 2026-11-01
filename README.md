@@ -18,10 +18,13 @@ before changing the report. Images are also decoded before insertion, but the
 signature check is not a complete integrity or malware scan. Previously saved
 reports are not automatically repaired.
 The My files image chooser rejects animated PNG and WebP rather than silently
-flattening them to a still image. Pasted HTML containing an animated or oversized
-embedded PNG is rejected as a whole with a notice. Other clipboard formats and
-images already in saved reports are not comprehensively checked; PDF output is
-a static document.
+flattening them to a still image. Pasted HTML is rejected as a whole with a
+notice if it contains a remote, missing, unsupported, animated, or over-4-MiB
+image, or invalid base64 or a mismatched PNG/JPEG signature. Upload a supported
+image to My files and use Image instead.
+Embedded PNG and JPEG may be pasted; ordinary text paste still works. Other
+clipboard formats and images already in saved reports are not comprehensively
+checked; PDF output is a static document.
 
 Run `npm ci --prefix apps/system/document-editor --ignore-scripts` before
 building. The bundled pdfmake Roboto fonts are distributed under the Apache
