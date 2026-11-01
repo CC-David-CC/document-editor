@@ -64,14 +64,26 @@ File-change checks are ordered so an older metadata response cannot clear a
 newer warning. The editor checks again after opening, saving or exporting,
 including when account-file changes arrived while the operation was busy.
 
-PDF export supports common Greek letters, verified superscripts/subscripts and
-selected math symbols from the bundled Roboto fonts, including Ω, Δ, μ, π, √,
-≈ and ≤. The added character ranges were checked against all four bundled Roboto font
-faces; other symbols still produce an explicit error. Local desktop
-and emulated-phone tests save and sync a report, inspect selectable PDF text,
-reopen the report in a fresh session, and verify an unsupported character does
-not replace an earlier PDF. Physical touch and every supported glyph have not
-been individually verified in a viewer.
+PDF export supports selected Latin, Greek, superscript/subscript and math
+glyphs from the bundled Roboto fonts, including Ω, Δ, μ, π, √, ≈ and ≤. Before
+export, text is checked against character maps common to all four bundled
+Roboto faces; unsupported characters identify their Unicode code point and
+stop the export before an existing PDF can be replaced. A report can still be
+saved and reopened with those characters. In the prior build, for example, ƀ
+was accepted but exported as a NUL character. Local desktop and emulated-phone
+account tests cover that failure, existing-PDF preservation, server sync and
+fresh-session reopening, as well as the supported engineering symbols. Physical
+touch and every accepted glyph have not been individually checked in a viewer.
+
+This guard is an interim measure. A broader-coverage PDF fallback should bundle
+appropriately licensed normal, bold, italic and bold-italic fonts, choose fonts
+per text run without splitting combining sequences, and validate shaping,
+extraction, links and mixed-font layouts. `tests/document-pdf-missing-glyph-review.test.mjs`
+contains the ƀ preservation fixture to evolve into an export-success check.
+A local Noto Sans inspection found ƀ in its four styles but not the existing
+Roboto math characters √, ≈ and ≤, so replacing Roboto wholesale would lose
+supported content. Check licenses, lazy-load cost and character maps before
+adding a fallback; verify both sets of glyphs and formatting in actual PDFs.
 
 Only one save-folder chooser can be active. Saving and PDF export wait for it
 to finish. If the document destination changes while it is open, the new path
