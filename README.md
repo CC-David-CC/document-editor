@@ -142,3 +142,14 @@ both images and My files insertion, PDF output, sync, reopening and a delayed-de
 edit race at desktop and emulated-phone sizes. This does not verify the operating
 system clipboard or physical phone paste; the test browser denied native clipboard
 write permission.
+
+Underline and strikethrough can be applied with the text controls and are
+preserved when supported HTML is pasted, saved to a report, reopened and
+exported to PDF. Combined underline, strikethrough and link formatting is
+supported. Older Document Editor builds without these marks reject such a
+report instead of silently discarding its formatting; use an updated build to
+open it. Local registered-account desktop and emulated-phone tests cover
+synthetic HTML paste, selected-text controls, saved document marks, PDF text,
+link annotation and drawing paths, server sync and fresh-session reopen.
+An older local build was also checked for rejection. Native OS clipboard,
+physical touch and every PDF renderer's appearance remain unverified.
