@@ -131,3 +131,14 @@ pages, plus server sync and fresh-session reopen at desktop and emulated-phone
 sizes. It also checked that an imported invalid span was rejected without
 rewriting the original. PDF text extraction was checked, not every visual layout
 or physical-phone interaction.
+
+A single PNG, JPEG or WebP image file on the clipboard can be embedded directly
+in a report; it uses the same size, animation and decoding checks as images
+inserted from My files. If the report or selection changes while decoding,
+insertion is cancelled. Clipboard payloads mixing image files with other content
+are rejected with a message so nothing is silently dropped. Local registered-account
+browser tests use a constructed clipboard event carrying a real PNG file and cover
+both images and My files insertion, PDF output, sync, reopening and a delayed-decode
+edit race at desktop and emulated-phone sizes. This does not verify the operating
+system clipboard or physical phone paste; the test browser denied native clipboard
+write permission.
