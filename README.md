@@ -168,3 +168,12 @@ synthetic HTML paste, selected-text controls, saved document marks, PDF text,
 link annotation and drawing paths, server sync and fresh-session reopen.
 An older local build was also checked for rejection. Native OS clipboard,
 physical touch and every PDF renderer's appearance remain unverified.
+
+## Browser commands
+
+The signed-in desktop's in-page command registry provides `inspect` for a
+bounded plain-text view and revision-checked `append-paragraph` for this report.
+Plain text omits formatting and images. Appending preserves the existing rich
+content and uses the normal dirty and undo handling; the command refuses to
+interrupt a focused editor. Save through the app's normal controls. This is not
+a full rich-document editing API or a remote agent connection.
