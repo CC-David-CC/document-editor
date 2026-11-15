@@ -9,5 +9,8 @@
     "@tiptap/extension-table": "3.32.1",
     "@tiptap/starter-kit": "3.32.1",
     "pdfmake": "0.2.23"
+  },
+  "scripts": {
+    "test:reference": "node --test --test-reporter=tap tests/reference/*.test.mjs"
   }
 }

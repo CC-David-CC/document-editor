@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import {validateTable} from '../apps/system/document-editor/table-validation.mjs';
+import assert from 'node:assert/strict';import {validateTable} from "../../table-validation.mjs";
 const cell=(attrs={})=>({type:'tableCell',attrs,content:[{type:'paragraph'}]}),row=(...cells)=>({type:'tableRow',content:cells}),table=(...rows)=>({type:'table',content:rows});
 assert.doesNotThrow(()=>validateTable(table(row(cell({rowspan:2}),cell({colspan:2})),row(cell(),cell()))));
 assert.doesNotThrow(()=>validateTable(table(row(cell({rowspan:2,colspan:2})),{type:'tableRow'})));
